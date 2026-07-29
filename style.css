@@ -1,41 +1,79 @@
-*{
+@font-face {
+    font-family: "GeneralSans";
+    src: url("./GeneralSans-Regular.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    FONT-FAMILY:"GeneralSans-Regular";
+    font-family: "GeneralSans", sans-serif;
 }
 
-body,html {
+body,
+html {
     height: 100%;
-    width:100%; 
+    width: 100%;
 }
 
-#main{
-    width: 100%;
-} 
+.bounding {
+    width: fit-content;
 
-#hero{
+    overflow: hidden;
+   
+    padding-bottom: 10px;
+
+}
+
+.bounding .boundingelem {
+    transform: translateY(100%);
+
+}
+
+#minicircle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#main {
+    width: 100%;
+    background-color: black;
+}
+
+#hero {
     width: 100%;
     height: 100vh;
-    position: relative;
     background-color: black;
     color: white;
+    position: relative;
+    overflow: hidden;
 }
 
-#nav{
+#nav {
     display: flex;
     width: 100%;
     height: 34px;
     color: white;
     align-items: center;
     justify-content: space-between;
-    padding:20px 20px;
+    padding: 20px 20px;
     /* background-color: white; */
 }
 
-#nav a{
+#nav a {
     color: white;
-    text-decoration:none;
+    text-decoration: none;
     font-size: 17px;
 }
 
@@ -44,170 +82,221 @@ body,html {
     margin-left: 40px;
 }
 
-#header h1{
-    opacity: 0.4;
-    font-size:9vw;
+#header h1 {
+    opacity: 0.7;
+    font-size: 9vw;
     text-transform: uppercase;
     line-height: 1;
 }
 
- #header #sec-h1 {
-   margin-left:100px
+#header #sec-h1 {
+    margin-left: 100px
 }
 
 
 
-.block_text{
+.block_text {
+    display: flex;
+    align-items: end;
+    flex-direction: column;
     width: fit-content;
-   
-   
+
+
 }
 
-.block_text h5{
+.block_text h5 {
     font-size: 2vw;
     text-transform: uppercase;
-    line-height: 1;
-     text-align: right;
-     opacity: 0.4;
-   
+    line-height: 1.2;
+    text-align: right;
+    opacity: 0.4;
+
 }
 
-#chotuheading{
-   padding-top: 100px;
-   
-   padding-right: 50px;
+#chotuheading {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    padding-top: 100px;
+
+    padding-right: 50px;
+
+
 }
 
 
-#chotuheading h5{
+#chotuheading h5 {
     font-size: 1.5vw;
     text-transform: uppercase;
     line-height: 1;
-     text-align: right;
-     opacity: 0.4;
-   
+    text-align: right;
+    opacity: 0.4;
+
 }
 
 
-#hero-footer{
-      display: flex;
-     justify-content: space-between;
+#hero-footer {
+    display: flex;
+    justify-content: space-between;
     width: 100%;
-     
-     position: absolute;
-     bottom: 2%;
-    padding: 0 2vw;; 
-    
+
+    position: absolute;
+    bottom: 2%;
+    padding: 0 2vw;
+    ;
+
 }
 
 
-#hero-footer a{
-text-decoration: none;
+#hero-footer a {
+    text-decoration: none;
     color: white;
     font-size: 17px;
 }
 
 
-#hero-footer #circleIcon{
+#hero-footer #circleIcon {
     display: flex;
     gap: 4px;
 }
 
 
-#second{
+#second {
     color: white;
     width: 100%;
     height: 100vh;
     padding-top: 100px;
-    background-color:black;
+    background-color: black;
     padding-right: 10vw;
-   
-    
+
+
 }
 
-.elem{
+.elem {
     position: relative;
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding:4vw 3vw;
+    padding: 4vw 3vw;
     border-top: 1px solid #888;
-    min-height: 12rem;
     align-items: center;
 }
 
-.elem h1{
+.elem h1 {
     font-size: 4vw;
     text-transform: uppercase;
     opacity: 0.7;
 }
 
-.elem h5{
+.elem h5 {
     font-size: 2vw;
     text-transform: uppercase;
     opacity: 0.7;
 }
-   .elemlast{
+
+.elemlast {
     border-bottom: 1px solid #888;
 }
 
-.elem img{
+.elem img {
     z-index: 999;
     position: absolute;
-   display:none;
+    display: none;
     height: 140%;
 }
-#about{
-   
+
+#about {
+
     padding: 10vw 10vw;
     width: 100%;
     background-color: black;
-      color: white;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      padding-left: 50vw;
-     /* margin-top: 10px;
-     display: flex; */
-     /* align-items: center;
-    justify-content: center; */
-    /* width: 100%;
-    height: 100vh;
-    background-color: black;
-    color: whitesmoke;
-    justify-content: center;
-    align-items: center; */
-   
+    color: white;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 40vw;
+
+
 
 }
 
-#about img{
-    
-    width: 200px;
+#about img {
+
+    width: 220px;
     /* height: 30vh; */
-    
-    border-radius:50% ;
-   
+
+    border-radius: 50%;
+
 }
 
-.imageabout a{
-  text-decoration: none;
-  color: white;
-  border: 1px solid gray;
-  border-radius: 20px;
+.imageabout a {
+    text-decoration: none;
+    color: white;
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: small;
 }
 
 
-.imageabout{
+.imageabout {
     width: 25rem;
-   
+
 }
 
-.imageabout h5{
+.imageabout h5 {
     text-transform: uppercase;
     margin-bottom: 2%;
 }
-.imageabout p{
- line-height: 24px;
+
+.imageabout p {
+    line-height: 1.7;
+    margin-bottom: 30px;
 }
 
+.subscribe {
+    text-transform: uppercase;
+    font-weight: 110;
+    background-color: black;
+    color: white;
+    padding: 30px 10px;
+    padding-bottom: 12vh;
+
+}
+
+.subscribe h5 {
+    opacity: 0.7;
+}
+
+.subscribe h4 {
+    margin-top: 12px;
+}
+
+.footermain {
+    /* position:absolute; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    background-color: black;
+    width: 100%;
+    bottom: 0px;
+    padding: 20px;
+}
+
+#footerleft {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-transform: uppercase;
+    gap: 20px;
+
+}
+
+#footerRight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
