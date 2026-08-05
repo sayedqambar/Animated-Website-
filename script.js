@@ -94,42 +94,84 @@ function imageHoverEffect() {
 
         let rotate = 0;
         let prevX = 0;
+        let prevY = 0;
 
-        elem.addEventListener("mousemove", function (dets) {
+        const img = elem.querySelector("img");
+        if (!img) return;
 
-            const img = elem.querySelector("img");
+        // Helper to animate image to coordinates relative to the element
+        function showAt(clientX, clientY, inputDiffX, inputDiffY) {
+            const rect = elem.getBoundingClientRect();
+            const left = clientX - rect.left;
+            const top = clientY - rect.top;
 
-            let diff = dets.clientX - prevX;
-            prevX = dets.clientX;
+            // rotate based on horizontal movement (and clamp)
+            rotate = gsap.utils.clamp(-20, 20, inputDiffX);
 
-            rotate = gsap.utils.clamp(-20, 20, diff);
-
-            // 👇 Put this here
             gsap.to(img, {
                 opacity: 1,
-                left: dets.offsetX,
-                top: dets.offsetY,
+                left: left + 'px',
+                top: top + 'px',
                 rotate: rotate,
-                duration: 0.25,
+                duration: 0.22,
                 ease: "power3.out"
             });
+        }
 
-        });
+        function hideImg() {
+            gsap.to(img, { opacity: 0, duration: 0.35 });
+        }
 
-        elem.addEventListener("mouseleave", function () {
-
-            gsap.to(elem.querySelector("img"), {
-                opacity: 0,
-                duration: 0.4
+        // If the device supports fine pointer (mouse/trackpad), use mousemove as before
+        if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+            elem.addEventListener("mousemove", function (dets) {
+                const diff = dets.clientX - prevX;
+                prevX = dets.clientX;
+                prevY = dets.clientY;
+                showAt(dets.clientX, dets.clientY, diff, dets.clientY - prevY);
             });
 
-        });
+            elem.addEventListener("mouseleave", function () {
+                hideImg();
+            });
+        } else {
+            // Touch devices: use touch events so users can still see the image animation while touching
+            let lastTouchX = 0;
+            elem.addEventListener('touchstart', function (ev) {
+                const t = ev.touches[0];
+                lastTouchX = t.clientX;
+                prevY = t.clientY;
+                showAt(t.clientX, t.clientY, 0, 0);
+            }, { passive: true });
+
+            elem.addEventListener('touchmove', function (ev) {
+                const t = ev.touches[0];
+                const diff = t.clientX - lastTouchX;
+                lastTouchX = t.clientX;
+                showAt(t.clientX, t.clientY, diff, t.clientY - prevY);
+                prevY = t.clientY;
+            }, { passive: true });
+
+            elem.addEventListener('touchend', function () {
+                hideImg();
+            }, { passive: true });
+        }
 
     });
 
 }
 
-mousemoveFollower();
-mouseSkew();
 firstpageAnim();
+
+// Enable image hover/touch effects on all devices (function internally attaches mouse or touch handlers)
 imageHoverEffect();
+
+// Only enable mouse-driven follower/skew on devices with a fine pointer (mouse/trackpad).
+if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+    mousemoveFollower();
+    mouseSkew();
+} else {
+    // On touch devices, hide the custom cursor
+    const minicircle = document.querySelector('#minicircle');
+    if (minicircle) minicircle.style.display = 'none';
+}

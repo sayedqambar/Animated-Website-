@@ -9,6 +9,41 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="locomotive-scroll.css">
+
+    <!-- Mobile / touch overrides to ensure image animation and layout behave on small devices -->
+    <style>
+    /* Mobile overrides (loaded after style.css) */
+    @media (max-width: 768px) {
+      #nav { padding: 10px 14px; }
+      #header { margin-left: 16px; margin-top: 16px; }
+      #header h1 { font-size: 14vw !important; }
+      #hero { padding-top: 56px; }
+      #chotuheading { display: none; }
+      #hero-footer { flex-direction: column; align-items: flex-start; gap: 10px; left: 2vw; right: 2vw; padding: 0; }
+      .elem { flex-direction: column; align-items: flex-start; padding: 6vw 4vw; }
+      .elem h1 { font-size: 8.5vw !important; }
+      .elem img { position: absolute !important; width: 60% !important; max-width: 260px !important; height: auto !important; transform: translate(-50%, -50%) !important; opacity: 0 !important; left: 50% !important; top: 50% !important; pointer-events: none !important; }
+      #about { flex-direction: column; padding: 6vw 4vw; padding-left: 4vw; gap: 20px; align-items: center; }
+      #about img { width: 160px; margin: 0 auto; }
+      .imageabout { width: 100%; }
+      .subscribe { padding: 20px 16px; padding-bottom: 6vh; }
+      #minicircle { display: none !important; }
+    }
+
+    @media (max-width: 480px) {
+      #header h1 { font-size: 18vw !important; }
+      .block_text h5, .elem h5 { font-size: 4.8vw !important; }
+      .imageabout p { font-size: 14px !important; }
+      .imageabout a { padding: 10px 12px !important; font-size: 13px !important; }
+      .elem img { width: 72% !important; max-width: 200px !important; }
+      #about { padding: 5vw 4vw !important; }
+    }
+
+    /* Ensure custom cursor is disabled on touch devices */
+    @media (hover: none) and (pointer: coarse) {
+      #minicircle { display: none !important; }
+    }
+    </style>
 </head>
 
 <body>
