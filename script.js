@@ -99,14 +99,40 @@ function imageHoverEffect() {
         const img = elem.querySelector("img");
         if (!img) return;
 
-        // Helper to animate image to coordinates relative to the element
-        function showAt(clientX, clientY, inputDiffX, inputDiffY) {
+        // UX tuning: offsets and sensitivity
+        const mouseOffset = { x: 20, y: -20 };       // small offset for mouse so cursor doesn't cover image
+        const touchOffset = { x: 48, y: -64 };       // larger offset for touch to keep image away from the finger
+        const touchSensitivity = 0.8;                // reduce rotation sensitivity on touch
+        const mouseSensitivity = 1.0;                // rotation sensitivity on mouse
+
+        // Helper to clamp a value between min and max
+        function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
+
+        // Helper to animate image to coordinates relative to the element, applying offsets and clamping so image stays inside element bounds
+        function showAt(clientX, clientY, inputDiffX, inputDiffY, isTouch) {
             const rect = elem.getBoundingClientRect();
-            const left = clientX - rect.left;
-            const top = clientY - rect.top;
+            const imgRect = img.getBoundingClientRect();
+            const imgHalfW = imgRect.width / 2 || 80; // fallback sizes if not yet measured
+            const imgHalfH = imgRect.height / 2 || 80;
+
+            // position relative to element top-left
+            let left = clientX - rect.left;
+            let top = clientY - rect.top;
+
+            // choose offset and sensitivity based on input type
+            const offset = isTouch ? touchOffset : mouseOffset;
+            const sensitivity = (isTouch ? touchSensitivity : mouseSensitivity);
+
+            // apply offset (so image is not under finger/cursor)
+            left = left + offset.x;
+            top = top + offset.y;
+
+            // constrain within element padding so image doesn't overflow the element bounds
+            left = clamp(left, imgHalfW, rect.width - imgHalfW);
+            top = clamp(top, imgHalfH, rect.height - imgHalfH);
 
             // rotate based on horizontal movement (and clamp)
-            rotate = gsap.utils.clamp(-20, 20, inputDiffX);
+            rotate = gsap.utils.clamp(-20, 20, inputDiffX * sensitivity);
 
             gsap.to(img, {
                 opacity: 1,
@@ -128,7 +154,7 @@ function imageHoverEffect() {
                 const diff = dets.clientX - prevX;
                 prevX = dets.clientX;
                 prevY = dets.clientY;
-                showAt(dets.clientX, dets.clientY, diff, dets.clientY - prevY);
+                showAt(dets.clientX, dets.clientY, diff, dets.clientY - prevY, false);
             });
 
             elem.addEventListener("mouseleave", function () {
@@ -141,14 +167,15 @@ function imageHoverEffect() {
                 const t = ev.touches[0];
                 lastTouchX = t.clientX;
                 prevY = t.clientY;
-                showAt(t.clientX, t.clientY, 0, 0);
+                // show a bit offset from finger
+                showAt(t.clientX, t.clientY, 0, 0, true);
             }, { passive: true });
 
             elem.addEventListener('touchmove', function (ev) {
                 const t = ev.touches[0];
                 const diff = t.clientX - lastTouchX;
                 lastTouchX = t.clientX;
-                showAt(t.clientX, t.clientY, diff, t.clientY - prevY);
+                showAt(t.clientX, t.clientY, diff, t.clientY - prevY, true);
                 prevY = t.clientY;
             }, { passive: true });
 
