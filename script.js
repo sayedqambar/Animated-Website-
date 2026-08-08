@@ -94,42 +94,111 @@ function imageHoverEffect() {
 
         let rotate = 0;
         let prevX = 0;
+        let prevY = 0;
 
-        elem.addEventListener("mousemove", function (dets) {
+        const img = elem.querySelector("img");
+        if (!img) return;
 
-            const img = elem.querySelector("img");
+        // UX tuning: offsets and sensitivity
+        const mouseOffset = { x: 20, y: -20 };       // small offset for mouse so cursor doesn't cover image
+        const touchOffset = { x: 48, y: -64 };       // larger offset for touch to keep image away from the finger
+        const touchSensitivity = 0.8;                // reduce rotation sensitivity on touch
+        const mouseSensitivity = 1.0;                // rotation sensitivity on mouse
 
-            let diff = dets.clientX - prevX;
-            prevX = dets.clientX;
+        // Helper to clamp a value between min and max
+        function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
 
-            rotate = gsap.utils.clamp(-20, 20, diff);
+        // Helper to animate image to coordinates relative to the element, applying offsets and clamping so image stays inside element bounds
+        function showAt(clientX, clientY, inputDiffX, inputDiffY, isTouch) {
+            const rect = elem.getBoundingClientRect();
+            const imgRect = img.getBoundingClientRect();
+            const imgHalfW = imgRect.width / 2 || 80; // fallback sizes if not yet measured
+            const imgHalfH = imgRect.height / 2 || 80;
 
-            // 👇 Put this here
+            // position relative to element top-left
+            let left = clientX - rect.left;
+            let top = clientY - rect.top;
+
+            // choose offset and sensitivity based on input type
+            const offset = isTouch ? touchOffset : mouseOffset;
+            const sensitivity = (isTouch ? touchSensitivity : mouseSensitivity);
+
+            // apply offset (so image is not under finger/cursor)
+            left = left + offset.x;
+            top = top + offset.y;
+
+            // constrain within element padding so image doesn't overflow the element bounds
+            left = clamp(left, imgHalfW, rect.width - imgHalfW);
+            top = clamp(top, imgHalfH, rect.height - imgHalfH);
+
+            // rotate based on horizontal movement (and clamp)
+            rotate = gsap.utils.clamp(-20, 20, inputDiffX * sensitivity);
+
             gsap.to(img, {
                 opacity: 1,
-                left: dets.offsetX,
-                top: dets.offsetY,
+                left: left + 'px',
+                top: top + 'px',
                 rotate: rotate,
-                duration: 0.25,
+                duration: 0.22,
                 ease: "power3.out"
             });
+        }
 
-        });
+        function hideImg() {
+            gsap.to(img, { opacity: 0, duration: 0.35 });
+        }
 
-        elem.addEventListener("mouseleave", function () {
-
-            gsap.to(elem.querySelector("img"), {
-                opacity: 0,
-                duration: 0.4
+        // If the device supports fine pointer (mouse/trackpad), use mousemove as before
+        if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+            elem.addEventListener("mousemove", function (dets) {
+                const diff = dets.clientX - prevX;
+                prevX = dets.clientX;
+                prevY = dets.clientY;
+                showAt(dets.clientX, dets.clientY, diff, dets.clientY - prevY, false);
             });
 
-        });
+            elem.addEventListener("mouseleave", function () {
+                hideImg();
+            });
+        } else {
+            // Touch devices: use touch events so users can still see the image animation while touching
+            let lastTouchX = 0;
+            elem.addEventListener('touchstart', function (ev) {
+                const t = ev.touches[0];
+                lastTouchX = t.clientX;
+                prevY = t.clientY;
+                // show a bit offset from finger
+                showAt(t.clientX, t.clientY, 0, 0, true);
+            }, { passive: true });
+
+            elem.addEventListener('touchmove', function (ev) {
+                const t = ev.touches[0];
+                const diff = t.clientX - lastTouchX;
+                lastTouchX = t.clientX;
+                showAt(t.clientX, t.clientY, diff, t.clientY - prevY, true);
+                prevY = t.clientY;
+            }, { passive: true });
+
+            elem.addEventListener('touchend', function () {
+                hideImg();
+            }, { passive: true });
+        }
 
     });
 
 }
 
-mousemoveFollower();
-mouseSkew();
 firstpageAnim();
+
+// Enable image hover/touch effects on all devices (function internally attaches mouse or touch handlers)
 imageHoverEffect();
+
+// Only enable mouse-driven follower/skew on devices with a fine pointer (mouse/trackpad).
+if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+    mousemoveFollower();
+    mouseSkew();
+} else {
+    // On touch devices, hide the custom cursor
+    const minicircle = document.querySelector('#minicircle');
+    if (minicircle) minicircle.style.display = 'none';
+}

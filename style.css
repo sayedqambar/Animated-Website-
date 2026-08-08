@@ -311,3 +311,62 @@ html {
     justify-content: space-between;
     gap: 15px;
 }
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    /* Nav and header adjustments */
+    #nav { padding: 10px 14px; }
+    #nav a { font-size: 16px; }
+    #nav h4 { display: none; }
+
+    #hero { padding-top: 56px; }
+    #header { margin-top: 16px; margin-left: 16px; }
+    #header h1 { font-size: 14vw; }
+    #header #sec-h1 { margin-left: 0; }
+
+    .block_text { align-items: flex-start; }
+    .block_text h5 { font-size: 4.2vw; text-align: left; }
+
+    #chotuheading { display: none; }
+
+    /* Hero footer stacks on small screens */
+    #hero-footer { flex-direction: column; align-items: flex-start; gap: 10px; left: 2vw; right: 2vw; padding: 0; }
+    #hero-footer a { font-size: 16px; }
+
+    /* Second section items stack vertically for narrow screens */
+    #second { padding-top: 40px; padding-right: 4vw; height: auto; }
+    .elem { flex-direction: column; align-items: flex-start; padding: 6vw 4vw; }
+    .elem h1 { font-size: 8.5vw; }
+    .elem h5 { font-size: 4.2vw; }
+    .elem img { position: absolute; width: 60%; max-width: 260px; height: auto; transform: translate(-50%, -50%); opacity: 0; left: 50%; top: 50%; pointer-events: none; }
+
+    /* About section becomes column layout */
+    #about { flex-direction: column; padding: 6vw 4vw; padding-left: 4vw; gap: 20px; align-items: center; }
+    #about img { width: 160px; margin: 0 auto; }
+    .imageabout { width: 100%; }
+    .imageabout p { font-size: 15px; }
+
+    .subscribe { padding: 20px 16px; padding-bottom: 6vh; }
+
+    .footermain { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px; }
+    #footerleft { gap: 10px; }
+    #footerRight { flex-wrap: wrap; gap: 10px; }
+n    /* Disable custom cursor on touch devices */
+    #minicircle { display: none; }n}
+
+@media (max-width: 480px) {
+    #header h1 { font-size: 18vw; }
+    .bounding { padding-bottom: 6px; }
+    .bounding .boundingelem { transform: translateY(100%); }
+n    .block_text h5, .elem h5 { font-size: 4.8vw; }
+    .imageabout p { font-size: 14px; }
+    .imageabout a { padding: 10px 12px; font-size: 13px; }
+n    #hero-footer { bottom: 2%; }
+    #about { padding: 5vw 4vw; }
+}
+
+/* Make large typography scale more predictably on very wide and very narrow viewports */
+@media (max-width: 1024px) {
+    #header h1 { font-size: clamp(36px, 9vw, 88px); }
+    .elem h1 { font-size: clamp(20px, 4vw, 48px); }
+}
